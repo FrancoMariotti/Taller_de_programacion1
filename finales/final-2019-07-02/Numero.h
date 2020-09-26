@@ -2,6 +2,9 @@
 Constructor(unsigned long), Constructor default y Constructor move; Operador <<,(),=,long y ++(int).
 Implemente el operador >>.*/
 
+#ifndef __NUMERO_H__
+#define __NUMERO_H__
+
 #include "iostream"
 #include "string"
 
@@ -17,9 +20,12 @@ class Numero {
         Numero(unsigned long numero);
         Numero(Numero&& numero);
         const Numero& operator=(const Numero& numero);
+        void operator()();
         Numero& operator=(Numero&& numero);
         Numero& operator++(); //pre-incremento
         Numero operator++(int);//post-incremento
         operator long() const;
-        ~Numero();
+        ~Numero() = default;
 };
+
+#endif
