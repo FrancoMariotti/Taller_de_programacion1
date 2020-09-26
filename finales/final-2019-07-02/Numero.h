@@ -9,7 +9,7 @@ using namespace std;
 
 class Numero {
     private:
-        string numero;
+        unsigned long numero;
         friend ostream &operator<<( ostream &output, const Numero &num );
         friend istream &operator>>( istream  &input, Numero &num );
     public:
