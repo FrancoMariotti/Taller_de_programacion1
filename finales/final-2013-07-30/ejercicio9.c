@@ -85,6 +85,8 @@ int main(int argc, char const *argv[]) {
     //para recibir el mensaje sabemos que 
     //debemos parar de recibir al detectar un 0x00
     recibir(cliente,buffer,TAMANIO_BUFFER);
+
+    
     negar_bits(buffer,TAMANIO_BUFFER);
     enviar(cliente,buffer,TAMANIO_BUFFER);
 
