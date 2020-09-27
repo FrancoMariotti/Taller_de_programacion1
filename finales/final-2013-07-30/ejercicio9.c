@@ -27,6 +27,7 @@ paquete nulo.
 //TAMANIO MAXIMO DEL PAQUETE.
 #define EXITO 0
 #define ERROR 1
+#define NULO 0x00
 #define TAMANIO_BUFFER 600
 #define IP "127.0.0.1"
 #define PUERTO "1972"
@@ -39,12 +40,24 @@ void enviar(int fd,char* buffer,int lenBuffer) {
     
 }
 
-void recibir(int fd,char* buffer,int lenBuffer) {
-    size_t recibido = 0;
-
-    while(recibido < lenBuffer) {
-        recibido += recv(fd,buffer + recibido, lenBuffer - recibido,0);
+bool seguir_recibiendo(char* buffer, int lenBuffer) {
+    for (int i = 0; i < lenBuffer; i++) {
+        if(buffer[i] == NULO) 
+            return false;
     }
+    return true;
+}
+
+size_t recibir(int fd,char* buffer,int lenBuffer) {
+    size_t recibido = 0;
+    bool seguirRecibiendo = true;
+
+    while(recibido < lenBuffer && seguirRecibiendo) {
+        recibido += recv(fd,buffer + recibido, lenBuffer - recibido,0);
+        seguirRecibiendo = seguir_recibiendo(buffer,lenBuffer);
+    }
+
+    return recibido;
 }
 
 void negar_bits(char* buffer,int lenBuffer) {
@@ -81,14 +94,21 @@ int main(int argc, char const *argv[]) {
     printf("Cliente Aceptado.\n");
     //printf("Numero:%d, Negado: %d\n",i,negado);
     char buffer[TAMANIO_BUFFER];
+    memset(buffer,0,TAMANIO_BUFFER);
 
     //para recibir el mensaje sabemos que 
     //debemos parar de recibir al detectar un 0x00
-    recibir(cliente,buffer,TAMANIO_BUFFER);
-
-    
-    negar_bits(buffer,TAMANIO_BUFFER);
-    enviar(cliente,buffer,TAMANIO_BUFFER);
+    bool finalizar = false;
+    size_t bytesRecibidos = 0;
+    while(!finalizar) {
+        bytesRecibidos = recibir(cliente,buffer,TAMANIO_BUFFER);
+        if(buffer[0] == NULO && bytesRecibidos == 1) {
+            finalizar = true;
+        } else {
+            negar_bits(buffer,bytesRecibidos);
+            enviar(cliente,buffer,bytesRecibidos);
+        }
+    }
 
     shutdown(cliente,SHUT_RDWR);
     shutdown(fdsck,SHUT_RDWR);
