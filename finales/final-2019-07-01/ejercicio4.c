@@ -7,64 +7,82 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
+#include "stdbool.h"
+#include <unistd.h>
+#include <sys/types.h>
 
-#define STATE_LEYENDO 0
+
+#define STATE_LEER 0
 #define STATE_FIN_PALABRA 1
-#define STATE_NUEVA_LINEA 2
-#define STATE_BORRAR 3
+#define STATE_FIN_LINEA 2
+#define STATE_ESCRIBIR 3
 #define STATE_FINISHED 4
-#define NUEVA_LINEA '\n'
-#define ESPACIO ' '
+#define DELIMITADORES " \n"
+
+int truncate(const char *path, off_t length);
+int ftruncate(int fd, off_t length);
 
 int main(int argc, char const *argv[]) {
     printf("Nombre de archivo: %s\n",argv[1]);
 
     FILE* fdr = fopen(argv[1],"r");
     FILE* fdw = fopen(argv[1],"r+");
-    char caracter = 0;
-    int state = STATE_LEYENDO;
+    
     int words = 0;
+    size_t tamanio_final = 0;
+    size_t contador = 0;
+    bool reposicionar = false;
+    char caracter = 0;
+    int state = STATE_LEER;
 
     while (state != STATE_FINISHED) {
         switch (state) {
-            case STATE_LEYENDO: ;
+            case STATE_LEER: ;
                 caracter = fgetc(fdr);
+                ++ contador;
                 if (caracter == EOF) {
                     state = STATE_FINISHED;
-                } else if (caracter == NUEVA_LINEA || caracter == ESPACIO) {                
-                    state = STATE_FIN_PALABRA;
+                } else if (strchr(DELIMITADORES,caracter)) {                
+                    ++ words;
+                    if(caracter == '\n') {
+                        state = STATE_FIN_LINEA;
+                    }
                 }
                 break;
-            case STATE_FIN_PALABRA:
-                words += 1;
-                if(caracter == NUEVA_LINEA) {
-                    state = STATE_NUEVA_LINEA;
+            case STATE_FIN_LINEA: ;
+                int proximoState = STATE_LEER;
+                if(words > 1) {
+                    tamanio_final += contador;
+                    if (reposicionar) {
+                        proximoState = STATE_ESCRIBIR;
+                    } else {
+                        fseek(fdw,ftell(fdr),SEEK_SET);
+                    }
                 } else {
-                    state = STATE_LEYENDO;
+                    reposicionar = true;                    
                 }
-                break;
-            case STATE_NUEVA_LINEA:
-                if(words == 1) {
-                    state = STATE_BORRAR;
-                } else {
-                    int corrimiento = ftell(fdr) - ftell(fdw);
-                    fseek(fdw,corrimiento,SEEK_CUR);
-                    state = STATE_LEYENDO;
-                    words = 0;
+
+                if(proximoState == STATE_LEER) {
+                    contador = 0;
                 }
+
+                state = proximoState;
+                words = 0;
                 break;
-            case STATE_BORRAR: ;
-                long int cantidadABorrar = ftell(fdr) - ftell(fdw) - 1;
-                for (size_t i = 0; i < cantidadABorrar; i++) {
-                    fputc(32,fdw);
+            case STATE_ESCRIBIR: ;
+                fseek(fdr,-contador,SEEK_CUR);
+                for(int i = 0; i< contador; i++) {
+                    fputc(fgetc(fdr),fdw);
                 }
-                fseek(fdw,1,SEEK_CUR);
-                state = STATE_LEYENDO;
+                state = STATE_LEER;
                 break;
+                
         }
     }
 
     fclose(fdr);
     fclose(fdw);
+
+    truncate(argv[1],sizeof(char) * tamanio_final);
     return 0;
 }
