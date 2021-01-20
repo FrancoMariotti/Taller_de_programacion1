@@ -3,68 +3,106 @@
 	siendo 'd' un digito y 'x' una letra mayuscula o minusucla.
 */
 #include <stdio.h>
+#include "stdlib.h"
+#include <stdbool.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <sys/types.h>
 
-#define SEPARADOR ","
+#define LARGO_SECUENCIA 6
 #define DIGITOS_SECUENCIA 2
 #define CARACTERES_SECUENCIA 4
 
-typedef enum{READING, COPYING, FIRST_BAR, LAST_STAR} state;
+int truncate(const char *path, off_t length);
+
+typedef enum{LEYENDO, PRIMER_DIGITO, ELIMINAR_SECUENCIA,ESCRIBIR} state;
+
+bool es_digito(const int c);
+bool es_caracter(const char c);
 
 
 int main(int argc,char const ** argv) {
-	char c;
-
-	FILE* rd = fopen(FILENAME,"r");
-	FILE* wr = fopen(FILENAME,"w+");
-
-	state estado_actual = COPYING;
 	char c = 0;
-	int digitos = 0;
-	int caracteres = 0;
+
+	FILE* rd = fopen(argv[1],"r");
+	FILE* wr = fopen(argv[1],"r+");
+
+	state estado = LEYENDO;
+	int digitos;
+	int caracteres;
+	int bytes_totales;
 
 	while(c != EOF) {
-		c = fgetc(rd);
+		switch(estado) {
+			case LEYENDO:
+				c = fgetc(rd);
 
-		if (state = LEER) {
-			if (es_digito(c)) {
-				state = PRIMER_DIGITO;
-				digitos++;
-			} else {
+				if (es_digito(c)) {
+					digitos ++;
+					estado = PRIMER_DIGITO;	
+				} else if (c != EOF) {
+					putc(c,wr);
+					bytes_totales ++;
+				}
+				break;
+			case PRIMER_DIGITO: ;
+				for (int i = 0; i < LARGO_SECUENCIA-1; i++) {
+					c = fgetc(rd);
+
+					if (es_digito(c)) {
+						digitos ++;
+					} else if(es_caracter(c)) {
+						caracteres ++;
+					}
+				}
+
+				estado = ESCRIBIR;
+				
+				if(digitos == DIGITOS_SECUENCIA && caracteres == CARACTERES_SECUENCIA) {
+					estado = ELIMINAR_SECUENCIA;
+				}
+
+				fseek(rd,-LARGO_SECUENCIA,SEEK_CUR);
+				break;
+			case ESCRIBIR: ;
+				c = fgetc(rd);
 				putc(c,wr); //avanzo puntero de escritura.
-			}
 
-		} else if (state = PRIMER_DIGITO) {
-			if (es_digito(c)) {
-				digitos++;
-			} else {
-				if(es_caracter(c) && digitos = DIGITOS_SECUENCIA) {
-					state = PRIMER_CARACTER;
-					caracteres++;
-				} else {
-					state = ESCRIBIR;
-				}
-			}
-		} else if (state = PRIMER_CARACTER) {
-			if (es_caracter(c)) {
-				caracteres++;
+				caracteres = 0;
+				digitos = 0;
+				bytes_totales ++;	
 
-				if(caracteres = CARACTERES) {
-					state = IMPRIMIR_SECUENCIA;
+				estado = LEYENDO;
+				break;
+			case ELIMINAR_SECUENCIA: ;
+
+				for (int i = 0; i < LARGO_SECUENCIA; i++) {
+					c = fgetc(rd);
+					printf("%c", c);
 				}
-			} else {
-				state = ESCRIBIR;
-			}
-		} else if (state = IMPRIMIR_SECUENCIA) {
-			
-		} else if(state = COPIAR) {
-			if(!encontre_secuencia) {
-				putc(c,wr); 
-			}
+				printf("\n");
+
+				caracteres = 0;
+				digitos = 0;
+				estado = LEYENDO;
+				break;
+
 		}
 	}
+
+	truncate(argv[1],sizeof(char)*bytes_totales);
 
 	fclose(rd);
 	fclose(wr);
 }
 
+
+bool es_digito(const int c) {
+	return (c >= 48 && c <= 57);
+}
+
+bool es_caracter(const char c) {
+	char cUpper = toupper(c);
+	return (cUpper >= 65 && cUpper <= 90);
+}
 
