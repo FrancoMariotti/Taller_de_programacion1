@@ -20,7 +20,7 @@ FooWindow::FooWindow(): button("Cerrar") {
 	//Seteo un tamanio de ventana.
 	this->set_default_size(200,200);
 
-	// asocio la funcion on_button_clicked con el evento "clicked" del boton
+	// asocio la funcion on_button_clicked con la senial "clicked" del boton
 	button.signal_clicked().connect(sigc::mem_fun(*this,&FooWindow::on_button_clicked));
 
 	add(button);
@@ -33,6 +33,7 @@ FooWindow::~FooWindow() {}
 // Función 'callback' para atender la señal "clicked" del botón
 void FooWindow::on_button_clicked() {
 	std::cout << "Saliendo de la aplicacion" << std::endl;
+	//salimos del loop de eventos
 	Gtk::Main::quit();
 }
 
