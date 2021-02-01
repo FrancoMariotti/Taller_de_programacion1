@@ -13,18 +13,11 @@ bool palabras_cmp(std::string str1,std::string str2) {
 }
 
 int main(int argc,char* argv[]) {
-	std::string cadena(argv[1]);
-	std::size_t pos = 0;
 	std::vector<std::string> palabras;
-	int comienzo = 0;
-	std::string palabra;
 
-	while (pos != std::string::npos) {
-		pos = cadena.find(DELIMITER,comienzo);
-		palabra = cadena.substr(comienzo,pos-comienzo);
-		comienzo = pos + 1;
-		palabras.push_back(palabra);
-	}
+    	for(int i=1;i<argc;i++){
+        	palabras.push_back(argv[i]);
+    	}
 
 	std::sort(palabras.begin(),palabras.end(),palabras_cmp);
 
@@ -33,6 +26,6 @@ int main(int argc,char* argv[]) {
 	for (it = palabras.begin(); it != palabras.end(); it++) {
 		std::cout<< *it <<std::endl;
 	}
-
+	
 	return 0;
 }
