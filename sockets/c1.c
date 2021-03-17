@@ -38,7 +38,7 @@ int main(int argc,char* argv[]) {
 	//podemos hacer send/recv.
 	size_t enviado = 0;
 	while (enviado < lenmensaje) {
-		send(sockFd,mensaje+enviado,lenmensaje-enviado,MSG_NOSIGNAL);
+		enviado = send(sockFd,mensaje+enviado,lenmensaje-enviado,MSG_NOSIGNAL);
 	}
 
 	shutdown(sockFd,SHUT_RDWR);
