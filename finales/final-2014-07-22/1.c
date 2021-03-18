@@ -1,5 +1,7 @@
-/*
-
+/* Sea la siguiente serie:
+	Nota: S0 = 1, S1 = 1 Sn= Sn-1 * 2 + Sn-2 * 3 , para todo n>=2
+	Escriba una programa C que reciba por linea de comandos 2 parametros: N y K e imprima 
+	por stdout los K terminos  del la serie comenzando por el termino N.
 */
 #include <stdio.h>
 #include <stdlib.h>
