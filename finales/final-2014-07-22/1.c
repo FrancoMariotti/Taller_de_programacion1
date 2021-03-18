@@ -25,19 +25,18 @@ int main(int argc, char* argv[]) {
 
 	serie[N_2] = C;
 	serie[N_1] = C;
+	serie[N] = C;
 
 	for (int i = 2; i < n; i++) {
-		serie[N] = calcular_termino(serie[N_1],serie[N_2]);
+		int aux = calcular_termino(serie[N_1],serie[N_2]);
 		serie[N_2] = serie[N_1];
-		serie[N_1] = serie[N];
+		serie[N_1] = aux;
 	}
 
 	printf("Serie:");
 
 	for (int i = n; i < n+k ; i++) {
-		if (i < 2) {
-			serie[N] = C;
-		} else {
+		if (i > 2) {
 			serie[N] = calcular_termino(serie[N_1],serie[N_2]);
 			serie[N_2] = serie[N_1];
 			serie[N_1] = serie[N];
