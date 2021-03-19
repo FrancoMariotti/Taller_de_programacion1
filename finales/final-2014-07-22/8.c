@@ -21,12 +21,12 @@ int main(int argc, char* argv[]) {
 	char buffer[4];
 
 	while(fread(buffer,sizeof(char),3,fr) > 0) {
-		printf("buff:%s\n",buffer);
+		//printf("buff:%s\n",buffer);
 		int num = atoi(buffer);
-		printf("num:%d\n",num );
+		//printf("num:%d\n",num );
 		memset(buffer,0,3);
 		snprintf(buffer,3,"%02x",num);
-		printf("num_s:%s\n",buffer );
+		//printf("num_s:%s\n",buffer );
 		fwrite(buffer,sizeof(char),2,fw);
 		memset(buffer,0,3);
 	}

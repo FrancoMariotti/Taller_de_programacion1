@@ -2,10 +2,12 @@
 #define ALUMNO_H
 
 	class Alumno {
+		std::string nombre;
+		int padron;
 	public:
 		Alumno();
+		Alumno(std::string& nombre, int padron);
 		Alumno(const Alumno& other);
-		Alumno(int padron);
 		const Alumno& operator=(const Alumno& other);
 		bool operator<(const Alumno& other) const;
 		bool operator==(const Alumno& other) const;
