@@ -1,0 +1,48 @@
+Describa las siguientes declaraciones/definiciones globales:
+
+1. extern char *a;
+
+declaracion de un puntero a un char cuya definicion se encuentra en un archivo externo.
+
+2. static char a;
+
+declaracion y definicion de la variable 'a' de tipo char cuya visibilidad se limita al archivo donde se la declaro.
+
+3. char a(char *a) {return *a;}
+
+definicion de una funcion 'a' que recibe como parametro un puntero a un char y devuelve un char(el valor al que apunta el puntero 'a').
+
+4. extern int (*B);
+
+declaracion de un puntero a int, cuya definicion se encuentra en un archivo externo.
+
+5. static signed int C;
+
+declaracion y definicion de una variable de tipo signed int(entero signado) cuya visibilidad se encuentra limitada al archivo donde se la declaro.
+
+6. static int *i[3];
+
+declaracion y definicion de un arreglo de 3 posiciones de punteros a int(entero), cuya visibilidad se limita al archivo donde se la declaro.
+
+7. extern signed int (*A)[1];
+
+declaracion de un puntero a un arreglo de 1 posicion de tipo signed int(entero signado), cuya definicion se encuentra en un archivo externo.
+
+8. extern short (*S)[2];
+
+declaracion de un puntero a un arreglo de 2 posiciones de tipo short int(enteros cortos), cuya definicion se encuentra en un archivo externo.
+
+9. extern short int S[2];
+
+declaracion de un arreglo de dos posiciones de tipo short int(entero corto), cuya definicion se encuentra en un archivo externo.
+
+10. static long int L[2];
+
+declaracion y definicion de un arreglo de 2 posiciones de tipo lont int(entero largo), cuya visibilidad se limita al archivo donde se lo declaro.
+
+11. static int resta(float a, double b) {return a-b;}
+
+declaracion de una funcion resta que recibe dos parametros, 'a' de tipo float(flotante) y 'b' de tipo double(doble precision) y retorna un int(entero). Su visibilidad se limita al archivo donde se la declaro. Se la define retornando la resta entre 'a' y 'b'.
+
+12. float calcular(char a,double** d);
+
