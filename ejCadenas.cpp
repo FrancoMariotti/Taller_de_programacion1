@@ -1,11 +1,12 @@
 #include <string>
 #include <iostream>
-#include <list>
+#include <vector>
+#include <algorithm>
 
 #define SPACE " "
 
-int vocales(const string& str) {
-	std::list<std::string>::iterator it = str.begin();
+int vocales(const std::string& str) {
+	std::string::const_iterator it = str.begin();
 	int vocales = 0;
 
 	for (it; it != str.end() ; it++) {
@@ -19,13 +20,13 @@ int vocales(const string& str) {
 	return vocales;
 } 
 
-bool cmp(const string& a,const string& b) {
+bool cmp_func(const std::string& a,const std::string& b) {
 	return vocales(a) > vocales(b);
 }
 
 int main(int argc,char* argv[]) {	
 	std::string oracion(argv[1]);
-	std::list<std::string> palabras;
+	std::vector<std::string> palabras;
 	int indice = 0;
 	bool terminar = false;
 
@@ -33,7 +34,7 @@ int main(int argc,char* argv[]) {
 		size_t pos = oracion.find(SPACE,indice);
 
 		if(pos != std::string::npos) { // si encontre un espacio.
-			palabras.push_back(oracion.substr(indice,pos+1));
+			palabras.push_back(oracion.substr(indice,pos-indice + 1));
 			indice = pos + 1; // para saltar el espacio.
 		} else { //queda la palabra final.
 			palabras.push_back(oracion.substr(indice));
@@ -42,9 +43,9 @@ int main(int argc,char* argv[]) {
 
 	}
 
-	std::sort(palabras.begin(),palabras.end(),cmp);
+	std::sort(palabras.begin(),palabras.end(),cmp_func);
 
-	std::list<std::string>::iterator it = palabras.begin();
+	std::vector<std::string>::iterator it = palabras.begin();
 
 	for (it; it != palabras.end() ; it++) {
 		std::cout << *it << std::endl; //imprimo las palabras en orden.
