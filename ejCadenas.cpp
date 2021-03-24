@@ -34,7 +34,7 @@ int main(int argc,char* argv[]) {
 
 		if(pos != std::string::npos) { // si encontre un espacio.
 			palabras.push_back(oracion.substr(indice,pos+1));
-			indice += pos + 1; // para saltar el espacio.
+			indice = pos + 1; // para saltar el espacio.
 		} else { //queda la palabra final.
 			palabras.push_back(oracion.substr(indice));
 			terminar = true;
