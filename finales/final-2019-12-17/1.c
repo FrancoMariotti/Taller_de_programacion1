@@ -14,11 +14,11 @@
 #define IGUAL '='
 #define MAS '+'
 
-bool paquete_nulo(char* buffer) {
+bool paquete_nulo(const char* buffer) {
 	return (buffer[0] == IGUAL);
 }
 
-int calcular_suma(char* buffer,size_t len_buffer) {
+int calcular_suma(const char* buffer,size_t len_buffer) {
 	int suma = 0;
 	int inicio = 0;
 
@@ -89,7 +89,7 @@ int main() {
 		if(paquete_nulo(buffer)) {
 			terminar = true;
 		} else {
-			int suma = calcular_suma(buffer,LEN_PACKAGE);
+			int suma = calcular_suma(buffer,recibidos);
 			printf("suma: %d\n", suma);
 		}
 
