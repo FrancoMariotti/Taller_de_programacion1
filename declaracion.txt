@@ -42,7 +42,60 @@ declaracion y definicion de un arreglo de 2 posiciones de tipo lont int(entero l
 
 11. static int resta(float a, double b) {return a-b;}
 
-declaracion de una funcion resta que recibe dos parametros, 'a' de tipo float(flotante) y 'b' de tipo double(doble precision) y retorna un int(entero). Su visibilidad se limita al archivo donde se la declaro. Se la define retornando la resta entre 'a' y 'b'.
+definicion de una funcion RESTA que recibe dos parametros, 'a' de tipo float(flotante) y 'b' de tipo double(doble precision) y retorna un int(entero) que es la resta entre 'a' y 'b'. Su visibilidad se limita al archivo donde se la declaro.
 
 12. float calcular(char a,double** d);
 
+declaracion de una funcion 'calcular' que recibe como parametros 'a' de tipo char y 'd' siendo 'd' un puntero doble a double(flotante de doble precision) y devuelve un float(flotante).
+
+Escriba las siguientes definiciones / declaraciones:
+
+1. Definición de un puntero a la función MULT que tome dos enteros largos con signo y devuelva su producto.
+
+signed long int mult(signed long int a,signed long int b) {
+	return a*b;
+}
+
+typdef signed long int (*func)(signed long int a,signed long int b) func_t;
+
+int main() {
+	func_t ptr;
+	ptr = mult;
+
+	printf("3*2 = %ld\n",ptr(2,3));
+	return 0;
+}
+
+
+
+2. Declaración de un puntero a puntero a punto flotante de doble presición.
+
+extern double** a;
+
+3. Definición de un caracter sin signo sólamente visible en el módulo.
+
+static unsigned char a;
+
+4. La declaración de una función denominada suma que tome como parámetros 2 punteros a entero y devuelva un puntero a un número de punto flotante de doble precisión.
+
+double* suma(int* a,int* b);
+
+5. La definición de un puntero a una función que toma como parámetros un entero corto con signo y un puntero a puntero a caracter y devuelve
+un número de punto flotante. El mismo debe poder accederse desde cualquier módulo del programa.
+
+typedef float (*func)(signed short int a,char** c) func_ptr;
+
+func_ptr f = funcion;
+
+
+6. Definición de la Función suma, que tome un arreglo de 10 enteros y devuelva un puntero a entero con la suma.
+
+int* suma(int a[10]) {
+	static int result = 0;
+
+	for(int i=0;i<10;i++) {
+		result += a[i];
+	}
+
+	return &result;
+}
